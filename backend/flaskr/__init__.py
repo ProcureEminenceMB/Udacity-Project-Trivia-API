@@ -16,9 +16,12 @@ def create_app(test_config=None):
 	# Set up CORS
 	CORS(app, resources={r"/api/*" : {"origins" : "*"}})
 
-	'''
-	@TODO: Use the after_request decorator to set Access-Control-Allow
-	'''
+	# Set access control
+	@app.after_request
+	def after_request(response):
+		response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization,true")
+		response.headers.add("Access-Control-Allow-Methods", "DELETE,GET,OPTIONS,PATCH,POST,PUT")
+		return response
 
 	'''
 	@TODO: 
