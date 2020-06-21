@@ -23,11 +23,19 @@ def create_app(test_config=None):
 		response.headers.add("Access-Control-Allow-Methods", "DELETE,GET,OPTIONS,PATCH,POST,PUT")
 		return response
 
-	'''
-	@TODO: 
-	Create an endpoint to handle GET requests 
-	for all available categories.
-	'''
+	# Handle GET requests
+	@app.route('/categories')
+	def get_categories():
+		category_list = Category.query.order_by(Category.type).all()
+
+		# Force 404 error if no gategories are found
+		if len(category_list) == 0:
+			abort(404)
+
+		return jsonify({
+			'success' : True,
+			'categories' : {category.id : category.type for category in category_list}
+		})
 
 
 	'''
