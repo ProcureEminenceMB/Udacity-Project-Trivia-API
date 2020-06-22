@@ -54,6 +54,7 @@
 }
 
 span.page-num {
+  cursor: pointer;
   margin: 5px;
   padding-bottom: 50px;
   /* color: blue; */
