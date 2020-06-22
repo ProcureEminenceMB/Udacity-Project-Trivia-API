@@ -47,7 +47,6 @@ def create_app(test_config=None):
 			'categories': {category.id : category.type for category in category_list}
 		})
 
-
 	@app.route('/questions')
 	def get_questions():
 		question_list = Question.query.order_by(Question.category).all()
@@ -65,14 +64,7 @@ def create_app(test_config=None):
 			'categories': {category.id : category.type for category in Category.query.order_by(Category.type).all()}
 		})
 	# END Handle GET requests
-	'''
-	@TODO: 
 
-	TEST: At this point, when you start the application
-	you should see questions and categories generated,
-	ten questions per page and pagination at the bottom of the screen for three pages.
-	Clicking on the page numbers should update the questions. 
-	'''
 
 	# Handle POST requests
 	@app.route('/search', methods=['POST'])
@@ -93,25 +85,57 @@ def create_app(test_config=None):
 			'currentCategory': ''
 		})
 
+	@app.route('/questions', methods = ['POST'])
+	def add_question():
+		data = request.get_json()
+		add_question = data.get('question', None)
+		add_answer = data.get('answer', None)
+		add_difficulty = data.get('difficulty', None)
+		add_category = data.get('category', None)
+
+		try:
+			question_to_add = Question(add_question, add_answer, add_category, add_difficulty)
+			question_to_add.insert()
+
+			return jsonify({
+				"success" : True
+			})
+
+		except:
+			# Force 422 error if the question cannot be added
+			abort(422)
+	# END Handle POST requests
+
 	'''
 	@TODO: 
-	Create an endpoint to DELETE question using a question ID. 
-
-	TEST: When you click the trash icon next to a question, the question will be removed.
-	This removal will persist in the database and when you refresh the page. 
-	'''
-
-	'''
-	@TODO: 
-	Create an endpoint to POST a new question, 
-	which will require the question and answer text, 
-	category, and difficulty score.
-
 	TEST: When you submit a question on the "Add" tab, 
 	the form will clear and the question will appear at the end of the last page
 	of the questions list in the "List" tab.	
 	'''
 
+	'''
+	@TODO: 
+	TEST: When you click the trash icon next to a question, the question will be removed.
+	This removal will persist in the database and when you refresh the page. 
+	'''
+	# Handle DELETE requests
+	@app.route('/questions/<int:question_id>', methods=['DELETE'])
+	def delete_question(question_id):
+		question_result = Question.query.get(question_id)
+
+		# Force 404 error if the desired question does not exist
+		if question_result is None:
+			abort(404)
+
+		try:
+			question_result.delete() 
+			return jsonify({
+				'success': True
+			})
+		except:
+			# Force 422 error if the question cannot be deleted
+			abort(422)
+	# END Handle DELETE requests
 	'''
 	@TODO: 
 	Create a GET endpoint to get questions based on category. 
