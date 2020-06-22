@@ -38,7 +38,7 @@ def create_app(test_config=None):
 	def get_categories():
 		category_list = Category.query.order_by(Category.type).all()
 
-		# Force 404 error if no gategories are found
+		# Force 404 error if no categories are found
 		if len(category_list) == 0:
 			abort(404)
 
@@ -48,12 +48,25 @@ def create_app(test_config=None):
 		})
 
 
+	@app.route('/questions')
+	def get_questions():
+		question_list = Question.query.order_by(Question.category).all()
+		requested_questions = paginate_question_list(request, question_list)
+
+		# Force 404 error if no questions are found
+		if len(requested_questions) == 0:
+			abort(404)
+
+		return jsonify({
+			'success': True,
+			'questions': requested_questions,
+			'total_questions': len(question_list),
+			'current_category': 'All Categories',
+			'categories': {category.id : category.type for category in Category.query.order_by(Category.type).all()}
+		})
+
 	'''
 	@TODO: 
-	Create an endpoint to handle GET requests for questions, 
-	including pagination (every 10 questions). 
-	This endpoint should return a list of questions, 
-	number of total questions, current category, categories. 
 
 	TEST: At this point, when you start the application
 	you should see questions and categories generated,
