@@ -15,6 +15,10 @@
     font-weight: bold;
 }
 
+.play-category {
+    cursor: pointer;
+}
+
 .play-category:hover {
     color: dodgerblue;
 }
