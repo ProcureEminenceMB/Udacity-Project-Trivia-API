@@ -93,6 +93,10 @@ def create_app(test_config=None):
 		add_difficulty = data.get('difficulty', None)
 		add_category = data.get('category', None)
 
+		# Force 400 error if any input field is left blank
+		if add_question == None or add_answer == None or add_difficulty == None or add_category == None:
+			abort(400)
+
 		try:
 			question_to_add = Question(add_question, add_answer, add_category, add_difficulty)
 			question_to_add.insert()
