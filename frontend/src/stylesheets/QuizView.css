@@ -20,6 +20,7 @@
 }
 
 .button {
+    cursor: pointer;
     width: 100px;
     margin-top: 5px;
     background-color: dodgerblue;
