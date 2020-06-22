@@ -8,6 +8,14 @@
   flex-shrink: 2;
 }
 
+.categories-list > ul > li {
+  cursor: pointer;
+}
+
+.categories-list > ul > li:hover {
+  color: blue;
+}
+
 .categories-list > form {
   width: 60%;
 }
