@@ -6,7 +6,17 @@ import random
 
 from models import setup_db, Question, Category
 
+# Create pagination for question GET route
 QUESTIONS_PER_PAGE = 10
+
+def paginate_question_list(request, selection):
+	page = request.args.get('page', 1, type=int)
+	start = (page - 1) * QUESTIONS_PER_PAGE
+	end = start + QUESTIONS_PER_PAGE
+	questions = [question.format() for question in selection]
+	current_page_questions = questions[start:end]
+
+	return current_page_questions
 
 def create_app(test_config=None):
 	# create and configure the app
