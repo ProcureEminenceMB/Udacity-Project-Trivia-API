@@ -43,8 +43,8 @@ def create_app(test_config=None):
 			abort(404)
 
 		return jsonify({
-			'success' : True,
-			'categories' : {category.id : category.type for category in category_list}
+			'success': True,
+			'categories': {category.id : category.type for category in category_list}
 		})
 
 
@@ -64,7 +64,7 @@ def create_app(test_config=None):
 			'current_category': 'All Categories',
 			'categories': {category.id : category.type for category in Category.query.order_by(Category.type).all()}
 		})
-
+	# END Handle GET requests
 	'''
 	@TODO: 
 
@@ -73,6 +73,25 @@ def create_app(test_config=None):
 	ten questions per page and pagination at the bottom of the screen for three pages.
 	Clicking on the page numbers should update the questions. 
 	'''
+
+	# Handle POST requests
+	@app.route('/questions', methods=['POST'])
+	def search_questions():
+		body = request.get_json()
+		search_text = body.get('searchTerm', None)
+		question_list = Question.query.filter(Question.question.ilike(f'%{search_text}%')).all()
+		requested_questions = paginate_question_list(request, question_list)
+
+		# Force 404 error if no questions are found
+		if len(requested_questions) == 0:
+			abort(404)
+
+		return jsonify({
+			'success': True,
+			'questions': requested_questions,
+			'totalQuestions': len(question_list),
+			'currentCategory': ''
+		})
 
 	'''
 	@TODO: 
@@ -91,17 +110,6 @@ def create_app(test_config=None):
 	TEST: When you submit a question on the "Add" tab, 
 	the form will clear and the question will appear at the end of the last page
 	of the questions list in the "List" tab.	
-	'''
-
-	'''
-	@TODO: 
-	Create a POST endpoint to get questions based on a search term. 
-	It should return any questions for whom the search term 
-	is a substring of the question. 
-
-	TEST: Search by any phrase. The questions list will update to include 
-	only question that include that string within their question. 
-	Try using the word "title" to start. 
 	'''
 
 	'''
