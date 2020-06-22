@@ -47,6 +47,39 @@ def create_app(test_config=None):
 			'categories': {category.id : category.type for category in category_list}
 		})
 
+	@app.route('/categories/<int:category_id>/questions')
+	def get_category_questions(category_id):
+
+		# Convert category_id to string for db query
+		category_id = str(category_id)
+
+		question_list = Question.query.filter(Question.category == category_id).all()
+		len(question_list)
+
+		try:
+			question_list = Question.query.filter(Question.category == category_id).all()
+			requested_questions = paginate_question_list(request, question_list)
+
+			if len(question_list) > 0:
+				return jsonify({
+					'success' : True,
+					'questions' : requested_questions,
+					'total_questions' : len(question_list),
+					'current_category' : category_id
+				})
+
+			else:
+				return jsonify({
+					'success' : False,
+					'questions' : requested_questions,
+					'total_questions' : len(question_list),
+					'current_category' : category_id
+				})
+
+		except:
+			# Force 422 error if the selected category id can't process
+			abort(422)
+
 	@app.route('/questions')
 	def get_questions():
 		question_list = Question.query.order_by(Question.id).all()
@@ -110,11 +143,7 @@ def create_app(test_config=None):
 			abort(422)
 	# END Handle POST requests
 
-	'''
-	@TODO: 
-	TEST: When you click the trash icon next to a question, the question will be removed.
-	This removal will persist in the database and when you refresh the page. 
-	'''
+
 	# Handle DELETE requests
 	@app.route('/questions/<int:question_id>', methods=['DELETE'])
 	def delete_question(question_id):
@@ -133,14 +162,6 @@ def create_app(test_config=None):
 			# Force 422 error if the question cannot be deleted
 			abort(422)
 	# END Handle DELETE requests
-	'''
-	@TODO: 
-	Create a GET endpoint to get questions based on category. 
-
-	TEST: In the "List" tab / main screen, clicking on one of the 
-	categories in the left column will cause only questions of that 
-	category to be shown. 
-	'''
 
 
 	'''
