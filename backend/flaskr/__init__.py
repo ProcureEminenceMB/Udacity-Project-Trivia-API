@@ -75,7 +75,7 @@ def create_app(test_config=None):
 	'''
 
 	# Handle POST requests
-	@app.route('/questions', methods=['POST'])
+	@app.route('/search', methods=['POST'])
 	def search_questions():
 		body = request.get_json()
 		search_text = body.get('searchTerm', None)
