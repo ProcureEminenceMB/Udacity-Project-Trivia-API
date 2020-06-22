@@ -49,7 +49,7 @@ def create_app(test_config=None):
 
 	@app.route('/questions')
 	def get_questions():
-		question_list = Question.query.order_by(Question.category).all()
+		question_list = Question.query.order_by(Question.id).all()
 		requested_questions = paginate_question_list(request, question_list)
 
 		# Force 404 error if no questions are found
@@ -109,13 +109,6 @@ def create_app(test_config=None):
 			# Force 422 error if the question cannot be added
 			abort(422)
 	# END Handle POST requests
-
-	'''
-	@TODO: 
-	TEST: When you submit a question on the "Add" tab, 
-	the form will clear and the question will appear at the end of the last page
-	of the questions list in the "List" tab.	
-	'''
 
 	'''
 	@TODO: 
