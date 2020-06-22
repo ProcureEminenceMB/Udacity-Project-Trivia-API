@@ -13,7 +13,7 @@
 }
 
 .categories-list > ul > li:hover {
-  color: blue;
+  color: dodgerblue;
 }
 
 .categories-list > form {
@@ -72,7 +72,7 @@ span.page-num {
 }
 
 span.page-num.active {
-  color: blue;
+  color: dodgerblue;
 }
 
 img.category {
