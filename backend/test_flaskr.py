@@ -98,6 +98,20 @@ class TriviaTestCase(unittest.TestCase):
 	# END Test POST routes
 
 
+	# Test DELETE routes
+	def test_delete_question(self):
+		# Get id of one question in the database
+		res = self.client().get('questions?page=1')
+		question_id = json.loads(res.data)['questions'][0]['id']
+		
+		res = self.client().delete(f'/questions/{question_id}')
+		data = json.loads(res.data)
+
+		self.assertEqual(res.status_code, 200)
+		self.assertEqual(data['success'], True)
+	# END Test DELETE routes
+
+
 	# Test error handlers
 	def test_400_error(self):
 		res = self.client().post('/questions', json={})
@@ -137,6 +151,7 @@ class TriviaTestCase(unittest.TestCase):
 		self.assertEqual(data['success'], False)
 		self.assertEqual(data['message'], 'Method Not Allowed')
 	# END Test error handlers
+
 # Make the tests conveniently executable
 if __name__ == "__main__":
 	unittest.main()
