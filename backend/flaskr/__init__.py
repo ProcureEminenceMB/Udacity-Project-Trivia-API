@@ -54,7 +54,6 @@ def create_app(test_config=None):
 		category_id = str(category_id)
 
 		question_list = Question.query.filter(Question.category == category_id).all()
-		len(question_list)
 
 		try:
 			question_list = Question.query.filter(Question.category == category_id).all()
