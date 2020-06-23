@@ -276,6 +276,47 @@ DELETE '/questions/<int:question_id>'
 }
 ```
 
+### Endpoint Error Details
+400 Error
+- Returns: An object with the following details
+```
+{
+  "success": False,
+  "error": 400,
+  "message": "Bad Request"
+}
+```
+
+404 Error
+- Returns: An object with the following details
+```
+{
+  "success": False,
+  "error": 404,
+  "message": "Not Found"
+}
+```
+
+405 Error
+- Returns: An object with the following details
+```
+{
+  "success": False,
+  "error": 405,
+  "message": "Method Not Allowed"
+}
+```
+
+422 Error
+- Returns: An object with the following details
+```
+{
+  "success": False,
+  "error": 422,
+  "message": "Unprocessable"
+}
+```
+
 ## Testing
 To run the tests, run
 ```
