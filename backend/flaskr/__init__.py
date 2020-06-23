@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-import random
+import random, copy
 
 from models import setup_db, Question, Category
 
@@ -166,14 +166,20 @@ def create_app(test_config=None):
 		if len(question_list) <= 0:
 			abort(422)
 
+		modified_question_list = copy.copy(question_list)
+
 		# Remove previously used questions from the db query results
 		for question in question_list:
+			print('question.id: ', question.id)
 			if question.id in previous_questions:
-				question_list.remove(question) # Remove array item based on the value
+				print('    Match found in previous_questions')
+				modified_question_list.remove(question) # Remove array item based on the value
 
 		# If the question list isn't empty, select a random index and add to previous question list
-		if len(question_list) > 0:
-			new_question = random.choice(question_list).format()
+		if len(modified_question_list) > 0:
+			new_question = random.choice(modified_question_list).format()
+		else:
+			new_question = False
 
 		return jsonify({
 			"success": True,
