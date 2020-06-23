@@ -54,7 +54,11 @@ class TriviaTestCase(unittest.TestCase):
 		self.assertEqual(data['message'], 'Not Found')
 
 	def test_get_question_list_in_category(self):
-		res = self.client().get('/categories/1/questions')
+		# Get category of one question in the database
+		res = self.client().get('/questions')
+		category_id = json.loads(res.data)['questions'][0]['category']
+		
+		res = self.client().get(f'/categories/{category_id}/questions')
 		data = json.loads(res.data)
 
 		self.assertEqual(res.status_code, 200)
@@ -91,7 +95,7 @@ class TriviaTestCase(unittest.TestCase):
 
 	# Test POST routes
 	def test_get_search_results(self):
-		res = self.client().post('/search', json={'searchTerm': 'title'})
+		res = self.client().post('/search', json={'searchTerm': 'a'})
 		data = json.loads(res.data)
 
 		self.assertEqual(res.status_code, 200)
@@ -128,12 +132,17 @@ class TriviaTestCase(unittest.TestCase):
 		self.assertEqual(data['message'], 'Bad Request')
 
 	def test_trivia_quiz(self):
+		# Get category of one question in the database
+		res = self.client().get('/questions')
+		category_id = json.loads(res.data)['questions'][0]['category']
+
 		selected_quiz_category = {
 			'quiz_category': {
 				'type': 'Science',
-				'id': 1
+				'id': category_id
 			}
 		}
+
 		res = self.client().post('/quizzes', json=selected_quiz_category)
 		data = json.loads(res.data)
 
