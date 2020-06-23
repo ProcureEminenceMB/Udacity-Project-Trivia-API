@@ -61,18 +61,18 @@ def create_app(test_config=None):
 
 			if len(question_list) > 0:
 				return jsonify({
-					'success' : True,
-					'questions' : requested_questions,
-					'total_questions' : len(question_list),
-					'current_category' : category_id
+					'success': True,
+					'questions': requested_questions,
+					'total_questions': len(question_list),
+					'current_category': category_id
 				})
 
 			else:
 				return jsonify({
-					'success' : False,
-					'questions' : requested_questions,
-					'total_questions' : len(question_list),
-					'current_category' : category_id
+					'success': False,
+					'questions': requested_questions,
+					'total_questions': len(question_list),
+					'current_category': category_id
 				})
 
 		except:
