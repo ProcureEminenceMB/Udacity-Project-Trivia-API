@@ -65,6 +65,39 @@ class TriviaTestCase(unittest.TestCase):
 	# END Test GET routes
 
 
+	# Test POST routes
+	def test_get_search_results(self):
+		res = self.client().post('/search', json={'searchTerm': 'title'})
+		data = json.loads(res.data)
+
+		self.assertEqual(res.status_code, 200)
+		self.assertEqual(data['success'], True)
+		self.assertTrue(len(data['questions']))
+		self.assertTrue(data['totalQuestions'])
+
+	def test_add_question(self):
+		res = self.client().post('/questions', json=self.new_question)
+		data = json.loads(res.data)
+
+		self.assertEqual(res.status_code, 200)
+		self.assertEqual(data['success'], True)
+
+	def test_trivia_quiz(self):
+		selected_quiz_category = {
+			'quiz_category': {
+				'type': 'Science',
+				'id': 1
+			}
+		}
+		res = self.client().post('/quizzes', json=selected_quiz_category)
+		data = json.loads(res.data)
+
+		self.assertEqual(res.status_code, 200)
+		self.assertEqual(data['success'], True)
+		self.assertTrue(data['question'])
+	# END Test POST routes
+
+
 	# Test error handlers
 	def test_400_error(self):
 		res = self.client().post('/questions', json={})
