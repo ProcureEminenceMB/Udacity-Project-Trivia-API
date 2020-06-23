@@ -94,7 +94,7 @@ GET '/categories'
 GET '/categories/<int:category_id>/questions'
 - Fetches a list of all available questions within the selected category.
 - Request Arguments: int:category_id
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs.
+- Returns: An object with a the current category, list of questions, pass/fail condition, and the total number of questions.
 ```
 {
   "current_category": "1", 
@@ -122,7 +122,7 @@ GET '/categories/<int:category_id>/questions'
 GET '/questions'
 - Fetches a list of all available questions for a given page. Each page returns a max of 10 questions. Defaults to page 1 if it is not specified via the query parameter.
 - Request Arguments: '?page=<int:page_number>' (optional).
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs.
+- Returns: An object with a list of available categories, current selected category, list of questions, pass/fail condition, and the total number of questions.
 ```
 {
   "categories": {
