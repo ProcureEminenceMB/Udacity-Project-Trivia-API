@@ -45,6 +45,14 @@ class TriviaTestCase(unittest.TestCase):
 		self.assertEqual(data['success'], True)
 		self.assertTrue(len(data['categories']))
 
+	def test_get_full_category_list_404_error(self):
+		res = self.client().get('/categories/')
+		data = json.loads(res.data)
+
+		self.assertEqual(res.status_code, 404)
+		self.assertEqual(data['success'], False)
+		self.assertEqual(data['message'], 'Not Found')
+
 	def test_get_question_list_in_category(self):
 		res = self.client().get('/categories/1/questions')
 		data = json.loads(res.data)
@@ -54,6 +62,14 @@ class TriviaTestCase(unittest.TestCase):
 		self.assertTrue(len(data['questions']))
 		self.assertTrue(data['total_questions'])
 
+	def test_get_question_list_in_category_422_error(self):
+		res = self.client().get('/categories/666/questions')
+		data = json.loads(res.data)
+
+		self.assertEqual(res.status_code, 422)
+		self.assertEqual(data['success'], False)
+		self.assertEqual(data['message'], 'Unprocessable')
+
 	def test_get_full_question_list(self):
 		res = self.client().get('/questions')
 		data = json.loads(res.data)
@@ -62,6 +78,14 @@ class TriviaTestCase(unittest.TestCase):
 		self.assertEqual(data['success'], True)
 		self.assertTrue(len(data['questions']))
 		self.assertTrue(data['total_questions'])
+
+	def test_get_full_question_list_404_error(self):
+		res = self.client().get('/questions/')
+		data = json.loads(res.data)
+
+		self.assertEqual(res.status_code, 404)
+		self.assertEqual(data['success'], False)
+		self.assertEqual(data['message'], 'Not Found')
 	# END Test GET routes
 
 
@@ -75,12 +99,33 @@ class TriviaTestCase(unittest.TestCase):
 		self.assertTrue(len(data['questions']))
 		self.assertTrue(data['totalQuestions'])
 
+	def test_get_search_results_404_error(self):
+		res = self.client().post('/search', json={'searchTerm': 'abcd1234'})
+		data = json.loads(res.data)
+
+		self.assertEqual(res.status_code, 404)
+		self.assertEqual(data['success'], False)
+		self.assertEqual(data['message'], 'Not Found')
+
 	def test_add_question(self):
 		res = self.client().post('/questions', json=self.new_question)
 		data = json.loads(res.data)
 
 		self.assertEqual(res.status_code, 200)
 		self.assertEqual(data['success'], True)
+
+	def test_add_question_400_error(self):
+		invalid_question = {
+			'question': 'Where do you look to see the sky?',
+			'answer': 'Down',
+			'category': '1'
+		}
+		res = self.client().post('/questions', json=invalid_question)
+		data = json.loads(res.data)
+
+		self.assertEqual(res.status_code, 400)
+		self.assertEqual(data['success'], False)
+		self.assertEqual(data['message'], 'Bad Request')
 
 	def test_trivia_quiz(self):
 		selected_quiz_category = {
@@ -95,6 +140,20 @@ class TriviaTestCase(unittest.TestCase):
 		self.assertEqual(res.status_code, 200)
 		self.assertEqual(data['success'], True)
 		self.assertTrue(data['question'])
+
+	def test_trivia_quiz_422_error(self):
+		selected_quiz_category = {
+			'quiz_category': {
+				'type': 'Science',
+				'id': -1
+			}
+		}
+		res = self.client().post('/quizzes', json=selected_quiz_category)
+		data = json.loads(res.data)
+
+		self.assertEqual(res.status_code, 422)
+		self.assertEqual(data['success'], False)
+		self.assertEqual(data['message'], 'Unprocessable')
 	# END Test POST routes
 
 
@@ -109,6 +168,14 @@ class TriviaTestCase(unittest.TestCase):
 
 		self.assertEqual(res.status_code, 200)
 		self.assertEqual(data['success'], True)
+
+	def test_delete_question_404_error(self):
+		res = self.client().delete(f'/questions/-1')
+		data = json.loads(res.data)
+
+		self.assertEqual(res.status_code, 404)
+		self.assertEqual(data['success'], False)
+		self.assertEqual(data['message'], 'Not Found')
 	# END Test DELETE routes
 
 
