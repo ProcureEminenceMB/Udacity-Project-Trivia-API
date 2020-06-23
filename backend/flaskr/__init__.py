@@ -170,9 +170,7 @@ def create_app(test_config=None):
 
 		# Remove previously used questions from the db query results
 		for question in question_list:
-			print('question.id: ', question.id)
 			if question.id in previous_questions:
-				print('    Match found in previous_questions')
 				modified_question_list.remove(question) # Remove array item based on the value
 
 		# If the question list isn't empty, select a random index and add to previous question list
