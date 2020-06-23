@@ -232,5 +232,6 @@ def create_app(test_config=None):
 			"error": 405,
 			"message": "Method Not Allowed"
 		}), 405
+	# END Error Handlers
 
 	return app
