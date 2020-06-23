@@ -36,6 +36,35 @@ class TriviaTestCase(unittest.TestCase):
 		"""Executed after reach test"""
 		pass
 
+	# Test GET routes
+	def test_get_full_category_list(self):
+		res = self.client().get('/categories')
+		data = json.loads(res.data)
+
+		self.assertEqual(res.status_code, 200)
+		self.assertEqual(data['success'], True)
+		self.assertTrue(len(data['categories']))
+
+	def test_get_question_list_in_category(self):
+		res = self.client().get('/categories/1/questions')
+		data = json.loads(res.data)
+
+		self.assertEqual(res.status_code, 200)
+		self.assertEqual(data['success'], True)
+		self.assertTrue(len(data['questions']))
+		self.assertTrue(data['total_questions'])
+
+	def test_get_full_question_list(self):
+		res = self.client().get('/questions')
+		data = json.loads(res.data)
+
+		self.assertEqual(res.status_code, 200)
+		self.assertEqual(data['success'], True)
+		self.assertTrue(len(data['questions']))
+		self.assertTrue(data['total_questions'])
+	# END Test GET routes
+
+
 	# Test error handlers
 	def test_400_error(self):
 		res = self.client().post('/questions', json={})
