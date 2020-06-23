@@ -211,6 +211,61 @@ GET '/questions'
 }
 ```
 
+POST '/search'
+- Fetches a list of all questions that match the search text.
+- Request Arguments: {'searchTerm': '<string:search_text>'}
+- Returns: An object with a the current category, list of matching questions, pass/fail condition, and the total number of questions.
+```
+{
+  "currentCategory": "", 
+  "questions": [
+    {
+      "answer": "Brazil", 
+      "category": "6", 
+      "difficulty": 3, 
+      "id": 10, 
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
+    }, 
+    {
+      "answer": "Uruguay", 
+      "category": "6", 
+      "difficulty": 4, 
+      "id": 11, 
+      "question": "Which country won the first ever soccer World Cup in 1930?"
+    }
+  ], 
+  "success": true, 
+  "totalQuestions": 2
+}
+```
+
+POST '/questions'
+- Adds a user-defined question to the database.
+- Request Arguments: {"question":"<string:question_text>","answer":"<string:answer_text>","difficulty":"<int:difficulty>","category":"<int:category_id>"}
+- Returns: An object with the pass/fail condition.
+```
+{
+  "success": true
+}
+```
+
+POST '/quizzes'
+- Returns one random question from the selected category. Once a question has been answered, that question can be removed from subsequent requests via the previous_questions argument.
+- Request Arguments: {"previous_questions":[],"quiz_category":{"type":"<string:category_name>","id":"<int:category_id>"}}
+- Returns: An object with the pass/fail condition.
+```
+{
+  "question": {
+    "answer": "Blood", 
+    "category": "1", 
+    "difficulty": 4, 
+    "id": 22, 
+    "question": "Hematology is a branch of medicine involving the study of what?"
+  }, 
+  "success": true
+}
+```
+
 ## Testing
 To run the tests, run
 ```
