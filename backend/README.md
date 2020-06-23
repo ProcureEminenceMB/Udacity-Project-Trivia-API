@@ -252,7 +252,7 @@ POST '/questions'
 POST '/quizzes'
 - Returns one random question from the selected category. Once a question has been answered, that question can be removed from subsequent requests via the previous_questions argument.
 - Request Arguments: {"previous_questions":[],"quiz_category":{"type":"<string:category_name>","id":"<int:category_id>"}}
-- Returns: An object with the pass/fail condition.
+- Returns: An object with the selected question and the pass/fail condition.
 ```
 {
   "question": {
@@ -262,6 +262,16 @@ POST '/quizzes'
     "id": 22, 
     "question": "Hematology is a branch of medicine involving the study of what?"
   }, 
+  "success": true
+}
+```
+
+DELETE '/questions/<int:question_id>'
+- Deletes a question from the database if a matching question id is found.
+- Request Arguments: None
+- Returns: An object with the pass/fail condition.
+```
+{
   "success": true
 }
 ```
