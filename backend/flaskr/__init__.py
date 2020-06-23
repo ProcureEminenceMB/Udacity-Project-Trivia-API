@@ -68,12 +68,8 @@ def create_app(test_config=None):
 				})
 
 			else:
-				return jsonify({
-					'success': False,
-					'questions': requested_questions,
-					'total_questions': len(question_list),
-					'current_category': category_id
-				})
+				# Force 404 error if the selected category id isn't found
+				abort(404)
 
 		except:
 			# Force 422 error if the selected category id can't process
