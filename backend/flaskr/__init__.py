@@ -174,12 +174,10 @@ def create_app(test_config=None):
 		# If the question list isn't empty, select a random index and add to previous question list
 		if len(question_list) > 0:
 			new_question = random.choice(question_list).format()
-			previous_questions.append(new_question['id'])
 
 		return jsonify({
 			"success": True,
-			"question": new_question,
-			"previousQuestions": ''
+			"question": new_question
 		})
 	# END Handle POST requests
 
