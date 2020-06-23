@@ -118,7 +118,7 @@ def create_app(test_config=None):
 			'currentCategory': ''
 		})
 
-	@app.route('/questions', methods = ['POST'])
+	@app.route('/questions', methods=['POST'])
 	def add_question():
 		data = request.get_json()
 		add_question = data.get('question', None)
@@ -141,8 +141,47 @@ def create_app(test_config=None):
 		except:
 			# Force 422 error if the question cannot be added
 			abort(422)
-	# END Handle POST requests
 
+	@app.route('/quizzes', methods=['POST'])
+	def trivia_quiz():
+		body = request.get_json()
+		previous_questions = body.get('previous_questions', [])
+		requested_category = body.get('quiz_category', 0)
+		category_id = int(requested_category['id'])
+		question_list = None
+		new_question = False
+
+		# Check for valid category id
+		if category_id == 0:
+			question_list = Question.query.all()
+
+		elif category_id > 0:
+			question_list = Question.query.filter(Question.category == requested_category['id']).all()
+
+		else:
+			# Force 422 error if the selected category isn't valid
+			abort(422)
+
+		# Force 422 error if no questions are found
+		if len(question_list) <= 0:
+			abort(422)
+
+		# Remove previously used questions from the db query results
+		for question in question_list:
+			if question.id in previous_questions:
+				question_list.remove(question) # Remove array item based on the value
+
+		# If the question list isn't empty, select a random index and add to previous question list
+		if len(question_list) > 0:
+			new_question = random.choice(question_list).format()
+			previous_questions.append(new_question['id'])
+
+		return jsonify({
+			"success": True,
+			"question": new_question,
+			"previousQuestions": ''
+		})
+	# END Handle POST requests
 
 	# Handle DELETE requests
 	@app.route('/questions/<int:question_id>', methods=['DELETE'])
@@ -162,19 +201,6 @@ def create_app(test_config=None):
 			# Force 422 error if the question cannot be deleted
 			abort(422)
 	# END Handle DELETE requests
-
-
-	'''
-	@TODO: 
-	Create a POST endpoint to get questions to play the quiz. 
-	This endpoint should take category and previous question parameters 
-	and return a random questions within the given category, 
-	if provided, and that is not one of the previous questions. 
-
-	TEST: In the "Play" tab, after a user selects "All" or a category,
-	one question at a time is displayed, the user is allowed to answer
-	and shown whether they were correct or not. 
-	'''
 
 	# Error Handlers
 	@app.errorhandler(400)
